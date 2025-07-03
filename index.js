@@ -18,9 +18,7 @@ const dbName = process.env.DB_NAME ;
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
-
 const uri = `mongodb+srv://${dbUsername}:${dbPassword}@cluster0.qtemx5j.mongodb.net/${dbName}?retryWrites=true&w=majority&appName=Cluster0`;
-
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -33,22 +31,30 @@ const client = new MongoClient(uri, {
 
 // -------------------------------------------------
 
+let allEquipmentCollection;
+
+client.connect()
+  .then(() => {
+    const db = client.db(dbName);
+    allEquipmentCollection = db.collection('equipments');
+    console.log('Connected to MongoDB and collection initialized.');
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB:', error);
+  });
+
+
+app.get('/all-equipments', (req, res) => {
+  allEquipmentCollection.find().toArray()
+    .then((data) => res.json(data))
+    .catch((error) => {
+      console.error('Error fetching data:', error);
+      res.status(500).json({ message: 'Error fetching data' });
+    });
+});
+
 
 // test port section -------------------------------------------
-
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
-}
-run().catch(console.dir);
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
