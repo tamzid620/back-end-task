@@ -4,8 +4,14 @@ const app = express()
 const cors = require('cors');
 const port = 3000
 
+app.use(cors());
+
 app.use(cors({
-  origin: ["http://localhost:5173"],
+    origin: [
+    "http://localhost:5173",
+    "https://front-end-task-sage.vercel.app"
+  ],
+
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   credentials: true
 }));
