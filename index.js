@@ -1,8 +1,9 @@
 const express = require('express')
+require('dotenv').config()
 const app = express()
 const cors = require('cors');
 const port = 3000
-require('dotenv').config()
+const { ObjectId } = require("mongodb");
 
 app.use(cors({
   origin: ["http://localhost:5173"],
@@ -53,6 +54,21 @@ app.get('/all-equipments', (req, res) => {
     });
 });
 
+app.get('/all-equipments/:id', (req, res) => {
+  const equipmentId = req.params.id;
+  allEquipmentCollection.findOne({ id: parseInt(equipmentId) })
+    .then((equipment) => {
+      if (equipment) {
+        res.json(equipment);
+      } else {
+        res.status(404).json({ message: 'equipment not found' });
+      }
+    })
+    .catch((error) => {
+      console.error('Error fetching equipment:', error);
+      res.status(500).json({ message: 'Error fetching equipment' });
+    });
+});
 
 // test port section -------------------------------------------
 
