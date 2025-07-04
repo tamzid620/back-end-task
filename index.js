@@ -3,10 +3,9 @@ require('dotenv').config()
 const app = express()
 const cors = require('cors');
 const port = 3000
-const { ObjectId } = require("mongodb");
 
 app.use(cors({
-  origin: ["http://localhost:5173/", "https://back-end-task-xi.vercel.app/"],
+  origin: ["http://localhost:5173"],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   credentials: true
 }));
